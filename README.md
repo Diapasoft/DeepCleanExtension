@@ -13,3 +13,10 @@ Once installed, you'll find DeepCleanExtension commands under "Extensions" menu 
 
 
 _Feel free to ask any question, open issues or contribute to this simple extension._
+
+
+References and examples for issues which can be resolved by this extension:
+
+* https://stackoverflow.com/questions/76662321/initializecomponent-does-not-exist
+* https://stackoverflow.com/questions/74601011/net-maui-the-name-initializecomponent-does-not-exist-in-the-current-context
+* https://csharpforums.net/threads/how-to-resolve-this-error-the-name-initializecomponent-does-not-exist-in-the-current-context.9391/
