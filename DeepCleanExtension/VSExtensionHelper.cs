@@ -12,44 +12,54 @@ namespace DeepCleanExtension
 {
     public interface IVSExtensionHelper
     {
-        public string? GetCurrentOpenVSSolutionPath();
+        public bool TryGetCurrentOpenVSProjectPath(out string projectPath);
+
+        public bool TryGetCurrentOpenVSSolutionPath(out string solutionPath);
 
         public void WriteStausBar(string text);
     }
 
     public class VSExtensionHelper(AsyncPackage package) : IVSExtensionHelper
     {
-        public string? GetCurrentOpenVSProjectPath()
+        public bool TryGetCurrentOpenVSProjectPath(out string projectPath)
         {
+            // Ensure we are on UI thread.
             ThreadHelper.ThrowIfNotOnUIThread();
+
+            projectPath = string.Empty;
 
             object? selectedObject = GetVSSelectedObject();
             if (selectedObject is ProjectItem projectItem)
             {
-                return projectItem.DTE.FullName;
+                projectPath = projectItem.DTE.FullName;
+                return true;
             }
-            return null;
+            return false;
         }
 
-        public string? GetCurrentOpenVSSolutionPath()
+        public bool TryGetCurrentOpenVSSolutionPath(out string solutionPath)
         {
+            // Ensure we are on UI thread.
             ThreadHelper.ThrowIfNotOnUIThread();
 
+            solutionPath = string.Empty;
+
             object? selectedObject = GetVSSelectedObject();
+            // Try to get selected project item.
             if (selectedObject is ProjectItem document)
             {
-                return document.DTE.Solution.FullName;
+                solutionPath = document.DTE.Solution.FullName;
+                return true;
             }
+            // Try by checking global service of type IVsSolution.
             else if (Package.GetGlobalService(typeof(IVsSolution)) is IVsSolution solution)
             {
                 solution.GetSolutionInfo(out string solutionDirectory, out string solutionName, out string solutionDirectory2);
                 DirectoryInfo solutionDirectoryInfo = new(solutionDirectory);
-                return solutionDirectoryInfo.FullName;
+                solutionPath = solutionDirectoryInfo.FullName;
+                return true;
             }
-            else
-            {
-                return null;
-            }
+            return false;
         }
 
         public void WriteStausBar(string text)
@@ -57,6 +67,7 @@ namespace DeepCleanExtension
             // Ensure we are on UI thread.
             ThreadHelper.ThrowIfNotOnUIThread();
 
+            // Get status bar service from current package.
             IVsStatusbar statusBar = package.GetService<SVsStatusbar, IVsStatusbar>();
 
             // Make sure the status bar is not frozen.
@@ -75,6 +86,7 @@ namespace DeepCleanExtension
 
         private object? GetVSSelectedObject()
         {
+            // Ensure we are on UI thread.
             ThreadHelper.ThrowIfNotOnUIThread();
 
             IVsMonitorSelection monitorSelection = (IVsMonitorSelection)Package.GetGlobalService(typeof(SVsShellMonitorSelection));

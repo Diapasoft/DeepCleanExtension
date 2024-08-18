@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
 using System.Windows.Forms;
+using static System.Environment;
 using Task = System.Threading.Tasks.Task;
 
 #nullable enable
@@ -70,32 +71,53 @@ namespace DeepCleanExtension
 
         #region Commands
 
+        /// <summary>
+        /// Delete all 'bin' and 'obj' directories in current VS Project.
+        /// </summary>
         private void CleanAllProjectDirectories()
         {
             if (MessageBox.Show("Confirm deleting all 'bin' and 'obj' directories in current Project?", nameof(DeepCleanExtension), MessageBoxButtons.YesNo) != DialogResult.Yes)
             {
                 return;
             }
-            string? projectPath = extensionHelper.GetCurrentOpenVSProjectPath();
-            Run(new AllDirectorySelector(), projectPath);
+            if (!extensionHelper.TryGetCurrentOpenVSProjectPath(out string projectPath))
+            {
+                NoSolutionOrProjectFound("Try opening a file from the project you want to deep clean.");
+                return;
+            }
+            RunCommand(new AllDirectorySelector(), projectPath);
             extensionHelper.WriteStausBar("Deep Clean command completed for all Project directories.");
         }
 
+        /// <summary>
+        /// Delete all 'bin' and 'obj' directories in current VS Solution.
+        /// </summary>
         private void CleanAllSolutionDirectories()
         {
             if (MessageBox.Show("Confirm deleting all 'bin' and 'obj' directories in current Solution?", nameof(DeepCleanExtension), MessageBoxButtons.YesNo) != DialogResult.Yes)
             {
                 return;
             }
-            string? solutionPath = extensionHelper.GetCurrentOpenVSSolutionPath();
-            Run(new AllDirectorySelector(), solutionPath);
+            if (!extensionHelper.TryGetCurrentOpenVSSolutionPath(out string solutionPath))
+            {
+                NoSolutionOrProjectFound();
+                return;
+            }
+            RunCommand(new AllDirectorySelector(), solutionPath);
             extensionHelper.WriteStausBar("Deep Clean command completed for all Solution directories.");
         }
 
+        /// <summary>
+        /// Let user select directories from current VS Solution and then delete selected ones.
+        /// </summary>
         private void SelectDirectoriesAndClean()
         {
-            string? solutionPath = extensionHelper.GetCurrentOpenVSSolutionPath();
-            Run(new DirectorySelectorByUser(), solutionPath);
+            if (!extensionHelper.TryGetCurrentOpenVSSolutionPath(out string solutionPath))
+            {
+                NoSolutionOrProjectFound();
+                return;
+            }
+            RunCommand(new DirectorySelectorByUser(), solutionPath);
             extensionHelper.WriteStausBar("Deep Clean command completed for selected directories.");
         }
 
@@ -114,20 +136,15 @@ namespace DeepCleanExtension
         }
 
         /// <summary>
-        /// Shows "No open Solution found" message.
+        /// Shows "No Solution / Project found" message.
         /// </summary>
-        private void NoSolutionFound()
+        private void NoSolutionOrProjectFound(string addText = "")
         {
-            MessageBox.Show($"{nameof(DeepCleanExtension)} was unable to get current Solution / Project.", nameof(DeepCleanExtension));
+            MessageBox.Show($"{nameof(DeepCleanExtension)} was unable to get current Solution / Project.{NewLine}{addText}", nameof(DeepCleanExtension));
         }
 
-        private void Run(IDirectorySelector directorySelector, string? path)
+        private void RunCommand(IDirectorySelector directorySelector, string path)
         {
-            if (string.IsNullOrEmpty(path) || path is null)
-            {
-                NoSolutionFound();
-                return;
-            }
             IList<DirectoryInfo> list = directorySelector.GetSelectedDirectories(path);
             foreach (DirectoryInfo dir in list)
             {

@@ -9,14 +9,19 @@ namespace DeepCleanExtension
 {
     #region Interface and Base Class
 
+    /// <summary>
+    /// Represent a service to select which directories have to be deleted.
+    /// </summary>
     internal interface IDirectorySelector
     {
         public IList<DirectoryInfo> GetSelectedDirectories(string path);
     }
 
-    internal class DirectorySelectorBase
+    internal abstract class DirectorySelector : IDirectorySelector
     {
-        private readonly static string[] allowedDirectories = ["bin", "obj"];
+        private readonly static string[] directoriesToDelete = ["bin", "obj"];
+
+        public abstract IList<DirectoryInfo> GetSelectedDirectories(string path);
 
         protected List<DirectoryInfo> GetProjectDirectories(string path)
         {
@@ -25,7 +30,7 @@ namespace DeepCleanExtension
             IEnumerable<DirectoryInfo> foundDirectories = new DirectoryInfo(solutionDir).GetDirectories();
             foreach (DirectoryInfo foundDirectory in foundDirectories)
             {
-                List<DirectoryInfo> binAndObjDirectories = foundDirectory.GetDirectories().Where(x => allowedDirectories.Contains(x.Name.ToLower())).ToList();
+                IEnumerable<DirectoryInfo> binAndObjDirectories = foundDirectory.GetDirectories().Where(x => directoriesToDelete.Contains(x.Name.ToLower()));
                 result.AddRange(binAndObjDirectories);
             }
             return result;
@@ -34,24 +39,24 @@ namespace DeepCleanExtension
 
     #endregion
 
-    internal class AllDirectorySelector : DirectorySelectorBase, IDirectorySelector
+    internal class AllDirectorySelector : DirectorySelector
     {
-        public IList<DirectoryInfo> GetSelectedDirectories(string path)
+        public override IList<DirectoryInfo> GetSelectedDirectories(string path)
         {
             List<DirectoryInfo> projectDirectories = GetProjectDirectories(path);
             return projectDirectories;
         }
     }
 
-    internal class DirectorySelectorByUser : DirectorySelectorBase, IDirectorySelector
+    internal class DirectorySelectorByUser : DirectorySelector
     {
-        public IList<DirectoryInfo> GetSelectedDirectories(string path)
+        public override IList<DirectoryInfo> GetSelectedDirectories(string path)
         {
             List<DirectoryInfo> projectDirectories = GetProjectDirectories(path);
             List<DirectoryInfo> selectedDirectories = new();
             foreach (DirectoryInfo dir in projectDirectories)
             {
-                if (MessageBox.Show($"Confirm cleaning directory '{dir.FullName}' ?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show($"Confirm cleaning directory '{dir.FullName}' ?", nameof(DeepCleanExtension), MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     selectedDirectories.Add(dir);
                 }
