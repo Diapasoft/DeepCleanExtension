@@ -63,7 +63,7 @@ namespace DeepCleanExtension
 
         private void ShowToolWindow(object sender, EventArgs e)
         {
-            JoinableTaskFactory.Run(async () =>
+            _ = JoinableTaskFactory.RunAsync(async () =>
             {
                 ToolWindowPane window = await ShowToolWindowAsync(typeof(AboutToolWindow), 0, true, DisposalToken);
                 if ((window?.Frame) == null)

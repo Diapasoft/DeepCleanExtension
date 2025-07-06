@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 #nullable enable
 
@@ -104,7 +103,4 @@ namespace DeepCleanExtension
             return selectedObject;
         }
     }
-
-    
-
 }

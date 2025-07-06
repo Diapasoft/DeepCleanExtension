@@ -20,19 +20,22 @@ namespace DeepCleanExtension
     {
         public static DeepCleanCommand Instance { get; private set; } = null!;
 
-        public bool EnableBuild { get; } = false; // Build after cleanup is currently disabled.
+        /// <summary>
+        /// Build after cleanup is currently disabled. A customizable settings will be added in future releases.
+        /// </summary>
+        public bool EnableBuild { get; } = false;
 
         private IAsyncServiceProvider ServiceProvider => _package;
 
-        public const int Command01 = 0x0101;
+        //public const int Command01 = 0x0101;
 
-        public const int Command02 = 0x0102;
+        //public const int Command02 = 0x0102;
 
-        public const int Command03 = 0x0103;
+        //public const int Command03 = 0x0103;
 
-        public const int Command04 = 0x0104;
+        public const int c01_CleanupSelectedProjects = 0x0101;
 
-        public const int Command05 = 0x0105;
+        public const int c02_CleanupEntireSolution = 0x0102;
 
         public static readonly Guid CommandSet = new("63eb71c3-4953-4295-9b6c-8549f2ff0abf");
 
@@ -55,8 +58,8 @@ namespace DeepCleanExtension
             //commandService.AddCommand(new MenuCommand((_, _) => CleanAllProjectDirectories(), new CommandID(CommandSet, Command02)));
             //commandService.AddCommand(new MenuCommand((_, _) => SelectDirectoriesAndClean(), new CommandID(CommandSet, Command03)));
 
-            // Command04: Deep clean single project
-            OleMenuCommand menu04 = new((_, _) =>
+            // Command01: Deep clean single project
+            OleMenuCommand c01 = new((_, _) =>
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
@@ -69,8 +72,8 @@ namespace DeepCleanExtension
                         await LogAsync($"Error in CleanSelectedProjectAsync: {ex}");
                     }
                 });
-            }, new CommandID(CommandSet, Command04));
-            menu04.BeforeQueryStatus += (_, e) =>
+            }, new CommandID(CommandSet, c01_CleanupSelectedProjects));
+            c01.BeforeQueryStatus += (_, e) =>
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
@@ -80,14 +83,14 @@ namespace DeepCleanExtension
                     {
                         isProjectSelected = true;
                     }
-                    menu04.Visible = isProjectSelected;
-                    menu04.Enabled = isProjectSelected;
+                    c01.Visible = isProjectSelected;
+                    c01.Enabled = isProjectSelected;
                 });
             };
-            commandService.AddCommand(menu04);
+            commandService.AddCommand(c01);
 
-            // Command05: Deep Clean All Projects in Solution
-            OleMenuCommand menu05 = new((_, _) =>
+            // Command02: Deep Clean All Projects in Solution
+            OleMenuCommand c02 = new((_, _) =>
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
@@ -100,18 +103,18 @@ namespace DeepCleanExtension
                         await LogAsync($"Error in CleanAllSolutionProjectsAsync: {ex}");
                     }
                 });
-            }, new CommandID(CommandSet, Command05));
-            menu05.BeforeQueryStatus += (_, __) =>
+            }, new CommandID(CommandSet, c02_CleanupEntireSolution));
+            c02.BeforeQueryStatus += (_, __) =>
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     DTE2? dte = await ServiceProvider.GetServiceAsync(typeof(DTE)) as DTE2;
                     bool isSolutionSelected = dte?.ToolWindows?.SolutionExplorer?.SelectedItems is Array items && items.Length == 1 && items.GetValue(0) is UIHierarchyItem hi && hi.Object is Solution;
-                    menu05.Visible = menu05.Enabled = isSolutionSelected;
+                    c02.Visible = c02.Enabled = isSolutionSelected;
                 });
             };
-            commandService.AddCommand(menu05);
+            commandService.AddCommand(c02);
         }
 
         #region new

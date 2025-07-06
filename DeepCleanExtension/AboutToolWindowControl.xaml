@@ -4,60 +4,110 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
     <Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}">
-        <StackPanel
-            Width="400"
+        <TabControl
             Margin="20"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
-            <TextBlock
-                Margin="0,0,0,10"
-                FontSize="24"
-                FontWeight="Bold"
-                Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
-                Text="Deep Clean VS Extension"
-                TextAlignment="Center" />
-            <TextBlock
-                Margin="0,0,0,20"
-                FontSize="20"
-                Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
-                Text="by Diapasoft"
-                TextAlignment="Center" />
-            <TextBlock
-                Margin="0,0,0,20"
-                FontSize="16"
-                Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
-                TextAlignment="Center"
-                TextWrapping="Wrap">
-                Quickly unload, clean and reload projects by removing bin and obj folders with a single click.<LineBreak />
-                Perfect for resolving build issues without restarting Visual Studio.</TextBlock>
-            <StackPanel
-                Margin="0,0,0,10"
-                HorizontalAlignment="Center"
-                Orientation="Vertical">
-                <TextBlock
-                    FontSize="14"
-                    TextAlignment="Center">
-                    <Hyperlink
-                        NavigateUri="https://www.paypal.me/diapasoft"
-                        RequestNavigate="Hyperlink_RequestNavigate">
-                        ☕ Buy me a coffee
-                    </Hyperlink>
-                </TextBlock>
-                <TextBlock
-                    FontSize="14"
-                    TextAlignment="Center">
-                    <Hyperlink
-                        NavigateUri="https://marketplace.visualstudio.com/items?itemName=Diapasoft.DeepCleanExtension"
-                        RequestNavigate="Hyperlink_RequestNavigate">
-                        ⭐ Rate this extension on the Marketplace
-                    </Hyperlink>
-                </TextBlock>
-            </StackPanel>
-            <TextBlock x:Name="tbVersion"
-                Margin="10"
-                Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
-                Text="Version: 1.0.0"
-                TextAlignment="Center" />
-        </StackPanel>
+            Background="Transparent">
+            <TabItem Header="About">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel
+                        Margin="10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            FontSize="24"
+                            FontWeight="Bold"
+                            Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                            Text="Visual Studio Deep Clean Extension"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="20"
+                            Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                            Text="by Diapasoft"
+                            TextAlignment="Center" />
+                        <TextBlock
+                            Margin="0,0,0,20"
+                            FontSize="16"
+                            Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap">
+                            <TextBlock.Inlines>
+                                <Run Text="Quickly unload, clean and reload projects by removing" />
+                                <Italic>
+                                    <Run Text="bin" />
+                                </Italic>
+                                <Run Text="and" />
+                                <Italic>
+                                    <Run Text="obj" />
+                                </Italic>
+                                <Run Text="folders with a single click." />
+                                <LineBreak />
+                                <Run Text="Helps fix common build problems caused by leftover files in bin and obj folders: no need to restart Visual Studio or manually cleaning your project folders." />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+                        <StackPanel
+                            Margin="0,0,0,10"
+                            HorizontalAlignment="Center"
+                            Orientation="Vertical">
+                            <TextBlock
+                                FontSize="14"
+                                TextAlignment="Center">
+                                <Hyperlink
+                                    NavigateUri="https://www.paypal.me/diapasoft"
+                                    RequestNavigate="Hyperlink_RequestNavigate">
+                                    ☕ Buy me a coffee
+                                </Hyperlink>
+                            </TextBlock>
+                            <TextBlock
+                                FontSize="14"
+                                TextAlignment="Center">
+                                <Hyperlink
+                                    NavigateUri="https://marketplace.visualstudio.com/items?itemName=Diapasoft.DeepCleanExtension"
+                                    RequestNavigate="Hyperlink_RequestNavigate">
+                                    ⭐ Rate this extension on the Visual Studio Marketplace
+                                </Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+                        <TextBlock x:Name="tbVersion"
+                            Margin="10"
+                            Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                            TextAlignment="Center" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <!--  How to  -->
+            <TabItem Header="How to use this extension">
+                <ScrollViewer
+                    Margin="10"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                        TextWrapping="Wrap">
+                        <Run
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Text="How to Use Deep Clean Extension" />
+                        <LineBreak /><LineBreak />
+                        <Run Text="• To perform cleanup on selected project(s), right-click the project(s) in Solution Explorer, then choose" />
+                        <Run
+                            FontWeight="Bold"
+                            Text="Deep Clean: Unload, Delete bin / obj and Reload Selected Project(s)." />
+                        <LineBreak /><LineBreak />
+                        <Run Text="• To perform cleanup on all projects (entire solution), right-click the solution node, then choose" />
+                        <Run
+                            FontWeight="Bold"
+                            Text="Deep Clean: Unload, Delete bin / obj and Reload Selected Project." />
+                        <LineBreak /><LineBreak />
+                    </TextBlock>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
     </Grid>
 </UserControl>

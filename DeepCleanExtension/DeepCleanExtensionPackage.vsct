@@ -73,7 +73,7 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
 
-			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="Command1Id" priority="0x0101" type="Button">
+			<!--<Button guid="guidDeepCleanExtensionPackageCmdSet" id="Command1Id" priority="0x0101" type="Button">
 				<Parent guid="guidDeepCleanExtensionPackageCmdSet" id="MyMenuGroup" />
 				<Strings>
 					<ButtonText>Run Deep Clean on all directories for current Solution</ButtonText>
@@ -92,9 +92,9 @@
 				<Strings>
 					<ButtonText>Select directories and run Deep Clean</ButtonText>
 				</Strings>
-			</Button>
+			</Button>-->
 
-			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="Command4Id" priority="0x0104" type="Button">
+			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="CleanupSelectedProjects" priority="0x0101" type="Button">
 				<Parent guid="guidDeepCleanExtensionPackageCmdSet" id="ProjectContextGroup" />
 				<Icon guid="guidImages" id="bmpPic1" />
 				<Strings>
@@ -102,7 +102,7 @@
 				</Strings>
 			</Button>
 
-			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="Command5Id" priority="0x0105" type="Button">
+			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="CleanupEntireSolution" priority="0x0102" type="Button">
 				<Parent guid="guidDeepCleanExtensionPackageCmdSet" id="SolutionContextGroup" />
 				<Icon guid="guidImages" id="bmpPic1" />
 				<Strings>
@@ -133,11 +133,11 @@
 		<GuidSymbol name="guidDeepCleanExtensionPackageCmdSet" value="{63eb71c3-4953-4295-9b6c-8549f2ff0abf}">
 			<IDSymbol name="CommandMenu" value="0x1010" />
 			<IDSymbol name="MyMenuGroup" value="0x1020" />
-			<IDSymbol name="Command1Id" value="0x0101" />
+			<!--<IDSymbol name="Command1Id" value="0x0101" />
 			<IDSymbol name="Command2Id" value="0x0102" />
-			<IDSymbol name="Command3Id" value="0x0103" />
-			<IDSymbol name="Command4Id" value="0x0104" />
-			<IDSymbol name="Command5Id" value="0x0105" />
+			<IDSymbol name="Command3Id" value="0x0103" />-->
+			<IDSymbol name="CleanupSelectedProjects" value="0x0101" />
+			<IDSymbol name="CleanupEntireSolution" value="0x0102" />
 			<IDSymbol name="ProjectContextGroup" value="0x1021" />
 			<IDSymbol name="SolutionContextGroup" value="0x1022" />
 			<IDSymbol name="AboutToolWindowCommandId" value="0x200" />

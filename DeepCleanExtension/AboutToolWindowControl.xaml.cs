@@ -15,7 +15,7 @@ namespace DeepCleanExtension
         public AboutToolWindowControl()
         {
             InitializeComponent();
-            tbVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            tbVersion.Text = "Version " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
