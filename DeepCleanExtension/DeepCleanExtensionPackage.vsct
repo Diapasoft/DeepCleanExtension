@@ -45,8 +45,19 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
 		<Groups>
+			<!-- existing group for Tools→Add‑ins -->
 			<Group guid="guidDeepCleanExtensionPackageCmdSet" id="MyMenuGroup" priority="0x0600">
 				<Parent guid="guidDeepCleanExtensionPackageCmdSet" id="CommandMenu" />
+			</Group>
+
+			<!-- new group for Project node -->
+			<Group guid="guidDeepCleanExtensionPackageCmdSet" id="ProjectContextGroup" priority="0x0200">
+				<Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+			</Group>
+
+			<!-- Group for our “Deep Clean All Projects” on Solution node -->
+			<Group guid="guidDeepCleanExtensionPackageCmdSet" id="SolutionContextGroup" priority="0x0201">
+				<Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE" />
 			</Group>
 		</Groups>
 
@@ -82,6 +93,30 @@
 					<ButtonText>Select directories and run Deep Clean</ButtonText>
 				</Strings>
 			</Button>
+
+			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="Command4Id" priority="0x0104" type="Button">
+				<Parent guid="guidDeepCleanExtensionPackageCmdSet" id="ProjectContextGroup" />
+				<Icon guid="guidImages" id="bmpPic1" />
+				<Strings>
+					<ButtonText>Deep Clean: Unload, Delete bin/obj, Reload and Rebuild</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="Command5Id" priority="0x0105" type="Button">
+				<Parent guid="guidDeepCleanExtensionPackageCmdSet" id="SolutionContextGroup" />
+				<Icon guid="guidImages" id="bmpPic1" />
+				<Strings>
+					<ButtonText>Deep Clean All Projects in Solution</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="AboutToolWindowCommandId" priority="0x0200" type="Button">
+				<Parent guid="guidDeepCleanExtensionPackageCmdSet" id="MyMenuGroup" />
+				<Strings>
+					<ButtonText>About Deep Clean Extension</ButtonText>
+				</Strings>
+			</Button>
+
 		</Buttons>
 
 		<!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -101,6 +136,11 @@
 			<IDSymbol name="Command1Id" value="0x0101" />
 			<IDSymbol name="Command2Id" value="0x0102" />
 			<IDSymbol name="Command3Id" value="0x0103" />
+			<IDSymbol name="Command4Id" value="0x0104" />
+			<IDSymbol name="Command5Id" value="0x0105" />
+			<IDSymbol name="ProjectContextGroup" value="0x1021" />
+			<IDSymbol name="SolutionContextGroup" value="0x1022" />
+			<IDSymbol name="AboutToolWindowCommandId" value="0x200" />
 		</GuidSymbol>
 
 		<GuidSymbol name="guidImages" value="{54aeedca-3496-4af9-a6a9-1c9ff463c562}">

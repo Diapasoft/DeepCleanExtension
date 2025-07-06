@@ -1,0 +1,63 @@
+﻿<UserControl
+    x:Class="DeepCleanExtension.AboutToolWindowControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vsfx="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
+    <Grid Background="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowBackgroundKey}}">
+        <StackPanel
+            Width="400"
+            Margin="20"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="24"
+                FontWeight="Bold"
+                Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                Text="Deep Clean VS Extension"
+                TextAlignment="Center" />
+            <TextBlock
+                Margin="0,0,0,20"
+                FontSize="20"
+                Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                Text="by Diapasoft"
+                TextAlignment="Center" />
+            <TextBlock
+                Margin="0,0,0,20"
+                FontSize="16"
+                Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                TextAlignment="Center"
+                TextWrapping="Wrap">
+                Quickly unload, clean and reload projects by removing bin and obj folders with a single click.<LineBreak />
+                Perfect for resolving build issues without restarting Visual Studio.</TextBlock>
+            <StackPanel
+                Margin="0,0,0,10"
+                HorizontalAlignment="Center"
+                Orientation="Vertical">
+                <TextBlock
+                    FontSize="14"
+                    TextAlignment="Center">
+                    <Hyperlink
+                        NavigateUri="https://www.paypal.me/diapasoft"
+                        RequestNavigate="Hyperlink_RequestNavigate">
+                        ☕ Buy me a coffee
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock
+                    FontSize="14"
+                    TextAlignment="Center">
+                    <Hyperlink
+                        NavigateUri="https://marketplace.visualstudio.com/items?itemName=Diapasoft.DeepCleanExtension"
+                        RequestNavigate="Hyperlink_RequestNavigate">
+                        ⭐ Rate this extension on the Marketplace
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <TextBlock x:Name="tbVersion"
+                Margin="10"
+                Foreground="{DynamicResource {x:Static vsfx:VsBrushes.ToolWindowTextKey}}"
+                Text="Version: 1.0.0"
+                TextAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</UserControl>
