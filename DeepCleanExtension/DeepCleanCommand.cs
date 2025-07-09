@@ -124,7 +124,7 @@ namespace DeepCleanExtension
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             await LogAsync("Starting CleanAllSolutionProjectsAsync…");
 
-            // 1) Get DTE and all projects
+            // 1) Get DTE and all projects.
             DTE2? dte = await ServiceProvider.GetServiceAsync(typeof(DTE)) as DTE2;
             if (dte?.Solution?.Projects is not Projects projs || projs.Count == 0)
             {
@@ -133,7 +133,7 @@ namespace DeepCleanExtension
                 return;
             }
 
-            // 0) Get current startup project(s)
+            // 2) Get current startup project(s).
             object? startup = dte.Solution?.SolutionBuild?.StartupProjects;
             string[]? startupProjects = startup switch
             {
@@ -142,7 +142,7 @@ namespace DeepCleanExtension
                 _ => null
             };
 
-            // 2) Collect them into a list(to avoid COM enumeration quirks.
+            // 3) Collect them into a list to avoid COM enumeration quirks.
             List<Project> list = [];
             foreach (Project p in projs)
             {
@@ -170,7 +170,7 @@ namespace DeepCleanExtension
                 }
             }
 
-            // 3) For each project, call your per‑project cleanup
+            // 4) For each project, call per‑project cleanup.
             foreach (Project project in list)
             {
                 Type a = project.GetType();
@@ -277,7 +277,16 @@ namespace DeepCleanExtension
                 return;
             }
 
-            // 2) Process each selected item
+            // 2) Get current startup project(s).
+            object? startup = dte.Solution?.SolutionBuild?.StartupProjects;
+            string[]? startupProjects = startup switch
+            {
+                string s => [s],
+                object[] arr => arr.OfType<string>().ToArray(),
+                _ => null
+            };
+
+            // 3) Process each selected item
             foreach (object? sel in selItems)
             {
                 if (sel is not UIHierarchyItem selItem || selItem.Object is not Project project)
@@ -286,6 +295,23 @@ namespace DeepCleanExtension
                     continue;
                 }
                 await CleanProjectAsync(project);
+            }
+
+            foreach (object? sel in selItems)
+            {
+                if (sel is not UIHierarchyItem selItem || selItem.Object is not Project project)
+                {
+                    continue;
+                }
+                // Restore startup project if needed
+                if (dte.Solution != null && startupProjects?.Contains(project.UniqueName, StringComparer.OrdinalIgnoreCase) == true)
+                {
+                    dte.Solution.SolutionBuild.StartupProjects = startupProjects.Length == 1
+                        ? project.UniqueName
+                        : startupProjects.Cast<object>().ToArray(); // Handles multi-startup projects
+
+                    await LogAsync("Startup project setting restored.");
+                }
             }
 
             extensionHelper.WriteStausBar("Deep Clean completed for selected project(s).");
@@ -363,71 +389,6 @@ namespace DeepCleanExtension
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             _outputPane?.OutputString($"{DateTime.Now:HH:mm:ss}  {message}{NewLine}");
-        }
-
-        private void NoSolutionOrProjectFound(string addText = "")
-        {
-            MessageBox.Show($"{nameof(DeepCleanExtension)} was unable to get current Solution / Project.{NewLine}{addText}", nameof(DeepCleanExtension));
-            _ = LogAsync("No solution or project found.");
-        }
-
-        #region Core Commands
-
-        private void CleanAllProjectDirectories()
-        {
-            if (MessageBox.Show("Confirm deleting all 'bin' and 'obj' directories in current Project?", nameof(DeepCleanExtension), MessageBoxButtons.YesNo) != DialogResult.Yes)
-            {
-                return;
-            }
-
-            if (!extensionHelper.TryGetCurrentOpenVSProjectPath(out string projectPath))
-            {
-                NoSolutionOrProjectFound("Try opening a file from the project you want to deep clean.");
-                return;
-            }
-            RunCommand(new AllDirectorySelector(), projectPath);
-            extensionHelper.WriteStausBar("Deep Clean command completed for all Project directories.");
-            _ = LogAsync($"CleanAllProjectDirectories on {projectPath}");
-        }
-
-        private void CleanAllSolutionDirectories()
-        {
-            if (MessageBox.Show("Confirm deleting all 'bin' and 'obj' directories in current Solution?", nameof(DeepCleanExtension), MessageBoxButtons.YesNo) != DialogResult.Yes)
-            {
-                return;
-            }
-
-            if (!extensionHelper.TryGetCurrentOpenVSSolutionPath(out string solutionPath))
-            {
-                NoSolutionOrProjectFound();
-                return;
-            }
-            RunCommand(new AllDirectorySelector(), solutionPath);
-            extensionHelper.WriteStausBar("Deep Clean command completed for all Solution directories.");
-            _ = LogAsync($"CleanAllSolutionDirectories on {solutionPath}");
-        }
-
-        private void SelectDirectoriesAndClean()
-        {
-            if (!extensionHelper.TryGetCurrentOpenVSSolutionPath(out string solutionPath))
-            {
-                NoSolutionOrProjectFound();
-                return;
-            }
-            RunCommand(new DirectorySelectorByUser(), solutionPath);
-            extensionHelper.WriteStausBar("Deep Clean command completed for selected directories.");
-            _ = LogAsync($"SelectDirectoriesAndClean on {solutionPath}");
-        }
-
-        #endregion
-
-        private void RunCommand(IDirectorySelector directorySelector, string path)
-        {
-            IEnumerable<DirectoryInfo> list = directorySelector.GetSelectedDirectories(path);
-            foreach (DirectoryInfo dir in list)
-            {
-                dir.Delete(true);
-            }
         }
     }
 }

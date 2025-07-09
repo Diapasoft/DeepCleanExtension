@@ -98,15 +98,15 @@
 				<Parent guid="guidDeepCleanExtensionPackageCmdSet" id="ProjectContextGroup" />
 				<Icon guid="guidImages" id="bmpPic1" />
 				<Strings>
-					<ButtonText>Deep Clean: Unload, Delete bin/obj, Reload and Rebuild</ButtonText>
+					<ButtonText>Deep Clean: unload, delete bin / obj folders and reload selected project(s)</ButtonText>
 				</Strings>
 			</Button>
 
-			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="CleanupEntireSolution" priority="0x0102" type="Button">
+			<Button guid="guidDeepCleanExtensionPackageCmdSet" id="CleanupEntireSolution" priority="0x0102" type="Button" >
 				<Parent guid="guidDeepCleanExtensionPackageCmdSet" id="SolutionContextGroup" />
 				<Icon guid="guidImages" id="bmpPic1" />
 				<Strings>
-					<ButtonText>Deep Clean All Projects in Solution</ButtonText>
+					<ButtonText>Deep Clean: unload, Delete bin / obj folders and reload all projects in solution</ButtonText>
 				</Strings>
 			</Button>
 

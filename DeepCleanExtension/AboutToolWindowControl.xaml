@@ -97,12 +97,12 @@
                         <Run Text="• To perform cleanup on selected project(s), right-click the project(s) in Solution Explorer, then choose" />
                         <Run
                             FontWeight="Bold"
-                            Text="Deep Clean: Unload, Delete bin / obj and Reload Selected Project(s)." />
+                            Text="Deep Clean: unload, delete bin / obj folders and reload selected project(s)." />
                         <LineBreak /><LineBreak />
                         <Run Text="• To perform cleanup on all projects (entire solution), right-click the solution node, then choose" />
                         <Run
                             FontWeight="Bold"
-                            Text="Deep Clean: Unload, Delete bin / obj and Reload Selected Project." />
+                            Text="Deep Clean: unload, Delete bin / obj folders and reload all projects in solution." />
                         <LineBreak /><LineBreak />
                     </TextBlock>
                 </ScrollViewer>
